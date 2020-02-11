@@ -44,7 +44,7 @@ scroll_bar.grid(row=1, column=8, rowspan=14, sticky=W)
 list_box.configure(yscrollcommand=scroll_bar.set)
 scroll_bar.configure(command=list_box.yview)
 
-# Additional buttons for CRUD purposes
+# Additional button widgets for CRUD purposes
 modify_btn = Button(app, text="Modify Record", background="black", foreground="black", font="helvetica 10 bold", command="")
 modify_btn.grid(row=15, column=4)
 
