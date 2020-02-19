@@ -27,3 +27,9 @@ class Bookdb:
         self.con.commit()
         messagebox.showinfo(title="Book Database", message="New book added to database")
     
+    def update(self, id, title, author, isbn):
+        sql = "UPDATE books SET title = ?, author = ?, isbn = ? WHERE id =?"
+        self.cursor.execute(sql, [title,author, isbn, id])
+        self.con.commit()
+        messagebox.showinfo(title="Book Database", message="Book Updated")
+    
