@@ -33,3 +33,8 @@ class Bookdb:
         self.con.commit()
         messagebox.showinfo(title="Book Database", message="Book Updated")
     
+    def delete(self, id):
+        sql = 'DELETE FROM books WHERE id = ?'
+        self.cursor.execute(sql, [id])
+        self.con.commit()
+        messsagebox.showinfo(title="Book Database", message="Book Deleted")
