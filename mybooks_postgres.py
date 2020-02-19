@@ -5,97 +5,10 @@ from tkinter import messagebox
 from postgres_config import dbConfig
 import psycopg2 as pyo 
 
-con = pyo.connect(**dbConfig)
-#print(con)
+from Bookdb import Bookdb
 
-cursor = con.cursor()
-
-
-class Bookdb:
-    def __init__(self):
-        self.con = pyo.connect(**dbConfig)
-        self.cursor = con.cursor()
-        print("You have connected to the  database")
-        print(con)
-
-    def __del__(self):
-        self.con.close()
-
-    def view(self):
-        self.cursor.execute("SELECT * FROM books")
-        rows = self.cursor.fetchall()
-        return rows
-
-    def insert(self,title, author, isbn):
-        sql=("INSERT INTO books(title,author,isbn)VALUES (%s,%s,%s)")
-        values =[title,author,isbn]
-        self.cursor.execute(sql,values)
-        self.con.commit()
-        messagebox.showinfo(title="Book Database",message="New book added to database")
-
-    def update(self, id, title, author, isbn):
-        tsql = 'UPDATE books SET  title = %s, author = %s, isbn = %s WHERE id=%s'
-        self.cursor.execute(tsql, [title,author,isbn,id])
-        self.con.commit()
-        messagebox.showinfo(title="Book Database",message="Book Updated")
-
-    def delete(self, id):
-        delquery ='DELETE FROM books WHERE id = %s'
-        self.cursor.execute(delquery, [id])
-        self.con.commit()
-        messagebox.showinfo(title="Book Database",message="Book Deleted")
 
 db = Bookdb()
-
-def get_selected_row(event):
-    global selected_tuple
-    index = list_bx.curselection()[0]
-    selected_tuple = list_bx.get(index)
-    title_entry.delete(0, 'end')
-    title_entry.insert('end', selected_tuple[1])
-    author_entry.delete(0, 'end')
-    author_entry.insert('end', selected_tuple[2])
-    isbn_entry.delete(0, 'end')
-    isbn_entry.insert('end', selected_tuple[3])
-
-def view_records():
-    list_bx.delete(0, 'end')
-    for row in db.view():
-        list_bx.insert('end', row)
-
-def add_book():
-    db.insert(title_text.get(),author_text.get(),isbn_text.get())
-    list_bx.delete(0, 'end')
-    list_bx.insert('end', (title_text.get(), author_text.get(), isbn_text.get()))
-    title_entry.delete(0, "end") # Clears input after inserting
-    author_entry.delete(0, "end")
-    isbn_entry.delete(0, "end")
-    con.commit()
-
-def delete_records():
-    db.delete(selected_tuple[0])
-    con.commit()
-
-def clear_screen():
-    list_bx.delete(0,'end')
-    title_entry.delete(0,'end')
-    author_entry.delete(0,'end')
-    isbn_entry.delete(0,'end')
-
-def update_records():
-    db.update(selected_tuple[0], title_text.get(), author_text.get(), isbn_text.get())
-    title_entry.delete(0, "end") # Clears input after inserting
-    author_entry.delete(0, "end")
-    isbn_entry.delete(0, "end")
-    con.commit()
-
-def on_closing():
-    dd = db
-    if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        app.destroy()
-        del dd
-
-
 app  = Tk() # Creates application window
 
 # Application window GUI - set to specific size that cannot be altered
@@ -126,13 +39,13 @@ isbn_entry.grid(row=0, column=5, sticky=W)
 
 # Add a button to insert inputs into database
 
-add_btn = Button(app, text="Add Book",bg="black",fg="black",font="helvetica 10 bold",command=add_book)
+add_btn = Button(app, text="Add Book",bg="black",fg="black",font="helvetica 10 bold")
 add_btn.grid(row=0, column=6, sticky=W)
 
 # Add  a listbox  to display data from database
 list_bx = Listbox(app,height=16,width=40,font="helvetica 13",bg="light blue")
 list_bx.grid(row=3,column=1, columnspan=14,sticky=W + E,pady=40,padx=15)
-list_bx.bind('<<ListboxSelect>>',get_selected_row)
+list_bx.bind('<<ListboxSelect>>')
 
 # Add scrollbar to enable scrolling
 scroll_bar = Scrollbar(app)
@@ -143,19 +56,19 @@ scroll_bar.configure(command=list_bx.yview)
 
 # Add more Button Widgets
 
-modify_btn = Button(app, text="Modify Record",bg="black",fg="black",font="helvetica 10 bold",command=update_records)
+modify_btn = Button(app, text="Modify Record",bg="black",fg="black",font="helvetica 10 bold")
 modify_btn.grid(row=15, column=4)
 
-delete_btn = Button(app, text="Delete Record",bg="black",fg="black",font="helvetica 10 bold",command=delete_records)
+delete_btn = Button(app, text="Delete Record",bg="black",fg="black",font="helvetica 10 bold")
 delete_btn.grid(row=15, column=5)
 
-view_btn = Button(app, text="View all records",bg="black",fg="black",font="helvetica 10 bold",command=view_records)
+view_btn = Button(app, text="View all records",bg="black",fg="black",font="helvetica 10 bold")
 view_btn.grid(row=15, column=1)#, sticky=tk.N)
 
-clear_btn = Button(app, text="Clear Screen",bg="black",fg="black",font="helvetica 10 bold",command=clear_screen)
+clear_btn = Button(app, text="Clear Screen",bg="black",fg="black",font="helvetica 10 bold")
 clear_btn.grid(row=15, column=2)#, sticky=tk.W)
 
-exit_btn = Button(app, text="Exit  Application",bg="black",fg="black",font="helvetica 10 bold",command=app.destroy)
+exit_btn = Button(app, text="Exit  Application",bg="black",fg="black",font="helvetica 10 bold")
 exit_btn.grid(row=15, column=3)
 
 
