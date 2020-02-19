@@ -89,13 +89,13 @@ isbn_entry.grid(row=0, column=5, sticky=W)
 
 # Add a button to insert inputs into database
 
-add_btn = Button(app, text="Add Book",bg="black",fg="black",font="helvetica 10 bold")
+add_btn = Button(app, text="Add Book",bg="black",fg="black",font="helvetica 10 bold", command=add_book)
 add_btn.grid(row=0, column=6, sticky=W)
 
 # Add  a listbox  to display data from database
 list_bx = Listbox(app,height=16,width=40,font="helvetica 13",bg="light blue")
 list_bx.grid(row=3,column=1, columnspan=14,sticky=W + E,pady=40,padx=15)
-list_bx.bind('<<ListboxSelect>>')
+list_bx.bind('<<ListboxSelect>>', get_selected_row)
 
 # Add scrollbar to enable scrolling
 scroll_bar = Scrollbar(app)
@@ -106,19 +106,19 @@ scroll_bar.configure(command=list_bx.yview)
 
 # Add more Button Widgets
 
-modify_btn = Button(app, text="Modify Record",bg="black",fg="black",font="helvetica 10 bold")
+modify_btn = Button(app, text="Modify Record",bg="black",fg="black",font="helvetica 10 bold", command=update_records)
 modify_btn.grid(row=15, column=4)
 
-delete_btn = Button(app, text="Delete Record",bg="black",fg="black",font="helvetica 10 bold")
+delete_btn = Button(app, text="Delete Record",bg="black",fg="black",font="helvetica 10 bold", command=delete_records)
 delete_btn.grid(row=15, column=5)
 
-view_btn = Button(app, text="View all records",bg="black",fg="black",font="helvetica 10 bold")
+view_btn = Button(app, text="View all records",bg="black",fg="black",font="helvetica 10 bold", command=view_records)
 view_btn.grid(row=15, column=1)#, sticky=tk.N)
 
-clear_btn = Button(app, text="Clear Screen",bg="black",fg="black",font="helvetica 10 bold")
+clear_btn = Button(app, text="Clear Screen",bg="black",fg="black",font="helvetica 10 bold", command=clear_screen)
 clear_btn.grid(row=15, column=2)#, sticky=tk.W)
 
-exit_btn = Button(app, text="Exit  Application",bg="black",fg="black",font="helvetica 10 bold")
+exit_btn = Button(app, text="Exit  Application",bg="black",fg="black",font="helvetica 10 bold", command=root.destroy)
 exit_btn.grid(row=15, column=3)
 
 
