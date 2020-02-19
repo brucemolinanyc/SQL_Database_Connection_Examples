@@ -38,6 +38,29 @@ def add_book():
     isbn_entry.delete(0, 'end')
     con.commit()
 
+def delete_records():
+    db.delete(selected_tuple[0])
+    con.commit()
+
+def clear_screen():
+    list_bx.delete(0, 'end')
+    title_entry.delete(0, 'end')
+    author_entry.delete(0, 'end')
+    isbn_entry.delete(0, 'end')
+
+def update_records():
+    db.update(selected_tuple[0], title_text.get(), author_text.get(), isbn_text.get())
+    title_entry.delete(0, 'end')
+    author_entry.delete(0, 'end')
+    isbn_entry.delete(0, 'end')
+    con.commit()
+
+def on_closing():
+    dd = db
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        root.destroy()
+        del dd
+
 # Application window GUI - set to specific size that cannot be altered
 app.title("My Books Database Application")
 app.configure(background="light green")
