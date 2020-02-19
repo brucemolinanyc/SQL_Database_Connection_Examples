@@ -1,16 +1,50 @@
-from tkinter import Tk, Button, Label, Scrollbar, Listbox, StringVar, Entry, W, E, N, S, END
+from tkinter import Tk, Button,Label,Scrollbar,Listbox,StringVar,Entry,W,E,N,S,END
 from tkinter import ttk
 from tkinter import messagebox
-
 from postgres_config import dbConfig
-import psycopg2 as pyo 
+import psycopg2 as pyo
 
-from Bookdb import Bookdb
+con = pyo.connect(**dbConfig)
+#print(con)
 
+cursor = con.cursor()
+
+
+class Bookdb:
+    def __init__(self):
+        self.con = pyo.connect(**dbConfig)
+        self.cursor = con.cursor()
+        print("You have connected to the  database")
+        print(con)
+
+    def __del__(self):
+        self.con.close()
+
+    def view(self):
+        self.cursor.execute("SELECT * FROM books")
+        rows = self.cursor.fetchall()
+        return rows
+
+    def insert(self,title, author, isbn):
+        sql=("INSERT INTO books(title,author,isbn)VALUES (%s,%s,%s)")
+        values =[title,author,isbn]
+        self.cursor.execute(sql,values)
+        self.con.commit()
+        messagebox.showinfo(title="Book Database",message="New book added to database")
+
+    def update(self, id, title, author, isbn):
+        tsql = 'UPDATE books SET  title = %s, author = %s, isbn = %s WHERE id=%s'
+        self.cursor.execute(tsql, [title,author,isbn,id])
+        self.con.commit()
+        messagebox.showinfo(title="Book Database",message="Book Updated")
+
+    def delete(self, id):
+        delquery ='DELETE FROM books WHERE id = %s'
+        self.cursor.execute(delquery, [id])
+        self.con.commit()
+        messagebox.showinfo(title="Book Database",message="Book Deleted")
 
 db = Bookdb()
-app  = Tk() # Creates application window
-
 
 def get_selected_row(event):
     global selected_tuple
@@ -23,19 +57,18 @@ def get_selected_row(event):
     isbn_entry.delete(0, 'end')
     isbn_entry.insert('end', selected_tuple[3])
 
-"""displays records in the listbox"""
 def view_records():
     list_bx.delete(0, 'end')
     for row in db.view():
         list_bx.insert('end', row)
 
 def add_book():
-    db.insert(title_text.get(), author_text.get(), isbn_text.get())
+    db.insert(title_text.get(),author_text.get(),isbn_text.get())
     list_bx.delete(0, 'end')
     list_bx.insert('end', (title_text.get(), author_text.get(), isbn_text.get()))
-    title_entry.delete(0, 'end') # clears input after inserting
-    author_entry.delete(0, 'end')
-    isbn_entry.delete(0, 'end')
+    title_entry.delete(0, "end") # Clears input after inserting
+    author_entry.delete(0, "end")
+    isbn_entry.delete(0, "end")
     con.commit()
 
 def delete_records():
@@ -43,23 +76,25 @@ def delete_records():
     con.commit()
 
 def clear_screen():
-    list_bx.delete(0, 'end')
-    title_entry.delete(0, 'end')
-    author_entry.delete(0, 'end')
-    isbn_entry.delete(0, 'end')
+    list_bx.delete(0,'end')
+    title_entry.delete(0,'end')
+    author_entry.delete(0,'end')
+    isbn_entry.delete(0,'end')
 
 def update_records():
     db.update(selected_tuple[0], title_text.get(), author_text.get(), isbn_text.get())
-    title_entry.delete(0, 'end')
-    author_entry.delete(0, 'end')
-    isbn_entry.delete(0, 'end')
+    title_entry.delete(0, "end") # Clears input after inserting
+    author_entry.delete(0, "end")
+    isbn_entry.delete(0, "end")
     con.commit()
 
 def on_closing():
     dd = db
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        root.destroy()
+        app.destroy()
         del dd
+
+app = Tk() 
 
 # Application window GUI - set to specific size that cannot be altered
 app.title("My Books Database Application")
@@ -118,7 +153,7 @@ view_btn.grid(row=15, column=1)#, sticky=tk.N)
 clear_btn = Button(app, text="Clear Screen",bg="black",fg="black",font="helvetica 10 bold", command=clear_screen)
 clear_btn.grid(row=15, column=2)#, sticky=tk.W)
 
-exit_btn = Button(app, text="Exit  Application",bg="black",fg="black",font="helvetica 10 bold", command=root.destroy)
+exit_btn = Button(app, text="Exit  Application",bg="black",fg="black",font="helvetica 10 bold", command=app.destroy)
 exit_btn.grid(row=15, column=3)
 
 
