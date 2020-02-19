@@ -1,10 +1,9 @@
 from tkinter import Tk, Button,Label,Scrollbar,Listbox,StringVar,Entry,W,E,N,S,END
 from tkinter import ttk
 from tkinter import messagebox
-from postgres_config import dbConfig
-import psycopg2 as pyo
+import sqlite3 as pyo
 
-con = pyo.connect(**dbConfig)
+con = pyo.connect("mybooks")
 #print(con)
 
 cursor = con.cursor()
@@ -12,8 +11,10 @@ cursor = con.cursor()
 
 class Bookdb:
     def __init__(self):
-        self.con = pyo.connect(**dbConfig)
+        self.con = pyo.connect("mybooks.db")
         self.cursor = con.cursor()
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY, title TEXT, author TEXT, isbn INTEGER)")
+        self.con.commit()
         print("You have connected to the database")
         print(con)
 
