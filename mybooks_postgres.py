@@ -11,6 +11,33 @@ from Bookdb import Bookdb
 db = Bookdb()
 app  = Tk() # Creates application window
 
+
+def get_selected_row(event):
+    global selected_tuple
+    index = list_bx.curselection()[0]
+    selected_tuple = list_bx.get(index)
+    title_entry.delete(0, 'end')
+    title_entry.insert('end', selected_tuple[1])
+    author_entry.delete(0, 'end')
+    author_entry.insert('end', selected_tuple[2])
+    isbn_entry.delete(0, 'end')
+    isbn_entry.insert('end', selected_tuple[3])
+
+"""displays records in the listbox"""
+def view_records():
+    list_bx.delete(0, 'end')
+    for row in db.view():
+        list_bx.insert('end', row)
+
+def add_book():
+    db.insert(title_text.get(), author_text.get(), isbn_text.get())
+    list_bx.delete(0, 'end')
+    list_bx.insert('end', (title_text.get(), author_text.get(), isbn_text.get()))
+    title_entry.delete(0, 'end') # clears input after inserting
+    author_entry.delete(0, 'end')
+    isbn_entry.delete(0, 'end')
+    con.commit()
+
 # Application window GUI - set to specific size that cannot be altered
 app.title("My Books Database Application")
 app.configure(background="light green")

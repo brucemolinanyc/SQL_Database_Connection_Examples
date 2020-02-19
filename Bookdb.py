@@ -40,13 +40,4 @@ class Bookdb:
         messsagebox.showinfo(title="Book Database", message="Book Deleted")
 
 
-def get_selected_row(event):
-    global selected_tuple
-    index = list_bx.curselection()[0]
-    selected_tuple = list_bx.get(index)
-    title_entry.delete(0, 'end')
-    title_entry.insert('end', selected_tuple[1])
-    author_entry.delete(0, 'end')
-    author_entry.insert('end', selected_tuple[2])
-    isbn_entry.delete(0, 'end')
-    isbn_entry.insert('end', selected_tuple[3])
+
