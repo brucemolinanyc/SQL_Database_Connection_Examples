@@ -14,3 +14,10 @@ class Bookdb:
 
     def __delete__(self):
         self.con.close()
+
+    def view(self):
+        self.cursor.execute("SELECT * FROM books")
+        rows = self.cursor.fetchall()
+        return rows
+
+    
